@@ -4,6 +4,7 @@ using CarShopWeb.Application.Interfaces.IServices;
 using CarShopWeb.Application.Interfaces.IUnitofworks;
 using CarShopWeb.Application.Models;
 using CarShopWeb.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,9 +56,9 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
 
         public async Task<ResponseModel<bool>> DeletePayments(int id)
         {
-            ResponseModel<CreatePaymentsDTO> responseModel = new ResponseModel<CreatePaymentsDTO>()
+            ResponseModel<bool> responseModel = new ResponseModel<bool>()
             {
-                Data = null,
+                Data = false,
                 StatusCode = 400
             };
             try
@@ -65,7 +66,17 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
                 var data = await _unitofWork.GetRepositories<Payments>().GetByIdAsync(id);
                 if(data != null)
                 {
-                    _mapper.Map<Payments>(data);
+                    _unitofWork.GetRepositories<Payments>().Delete(data);
+                    int rowsaffected = await _unitofWork.SaveChangesAsync();
+                    if(rowsaffected > 0)
+                    {
+                        responseModel.Data = true;
+                        responseModel.StatusCode = 200;
+                    }
+                    else
+                    {
+                        responseModel.StatusCode = 500;
+                    }
                 }
             }
             catch
@@ -75,16 +86,26 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
             return responseModel;
         }
 
-        public Task<ResponseModel<List<GetPaymentsDTO>>> GetAll()
+        public async Task<ResponseModel<List<GetPaymentsDTO>>> GetAll()
         {
-            ResponseModel<CreatePaymentsDTO> responseModel = new ResponseModel<CreatePaymentsDTO>()
+            ResponseModel<List<GetPaymentsDTO>> responseModel = new ResponseModel<List<GetPaymentsDTO>>()
             {
                 Data = null,
                 StatusCode = 400
             };
             try
             {
-
+                var data = await _unitofWork.GetRepositories<Payments>().GetAll().ToListAsync();
+                if(data != null)
+                {
+                    var payments = _mapper.Map<List<GetPaymentsDTO>>(data);
+                    responseModel.Data = payments;
+                    responseModel.StatusCode = 200;
+                }
+                else
+                {
+                    responseModel.StatusCode = 500;
+                }
             }
             catch
             {
@@ -93,16 +114,26 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
             return responseModel;
         }
 
-        public Task<ResponseModel<GetPaymentsDTO>> GetPaymentsById(int id)
+        public async Task<ResponseModel<GetPaymentsDTO>> GetPaymentsById(int id)
         {
-            ResponseModel<CreatePaymentsDTO> responseModel = new ResponseModel<CreatePaymentsDTO>()
+            ResponseModel<GetPaymentsDTO> responseModel = new ResponseModel<GetPaymentsDTO>()
             {
                 Data = null,
                 StatusCode = 400
             };
             try
             {
-
+                var data = await _unitofWork.GetRepositories<Payments>().GetByIdAsync(id);
+                if(data != null)
+                {
+                    var feature = _mapper.Map<GetPaymentsDTO>(data);
+                    responseModel.Data = feature;
+                    responseModel.StatusCode = 200;
+                }
+                else
+                {
+                    responseModel.StatusCode = 500;
+                }
             }
             catch
             {
@@ -111,16 +142,30 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
             return responseModel;
         }
 
-        public Task<ResponseModel<bool>> UpdatePayments(UpdatePaymentsDTO updatePaymentsDTO, int id)
+        public async Task<ResponseModel<bool>> UpdatePayments(UpdatePaymentsDTO updatePaymentsDTO, int id)
         {
-            ResponseModel<CreatePaymentsDTO> responseModel = new ResponseModel<CreatePaymentsDTO>()
+            ResponseModel<bool> responseModel = new ResponseModel<bool>()
             {
-                Data = null,
+                Data = false,
                 StatusCode = 400
             };
             try
             {
-
+                var data = await _unitofWork.GetRepositories<Payments>().GetByIdAsync(id);
+                if (data != null)
+                {
+                    _mapper.Map(updatePaymentsDTO, data);
+                    int rowsaffected = await _unitofWork.SaveChangesAsync();
+                    if(rowsaffected > 0)
+                    {
+                        responseModel.Data = true;
+                        responseModel.StatusCode = 200;
+                    }
+                    else
+                    {
+                        responseModel.StatusCode = 500;
+                    }
+                }
             }
             catch
             {
