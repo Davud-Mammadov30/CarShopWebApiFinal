@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CarShopWeb.Infrastructure.Implementations.Services
+namespace CarShopWeb.Persistence.Implementations.Services
 {
     public class CarsService : ICarsService
     {
