@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CarShopWeb.Application\CarShopWeb.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\CarShopWeb.Infrastructure\CarShopWeb.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\CarShopWeb.Persistance\CarShopWeb.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

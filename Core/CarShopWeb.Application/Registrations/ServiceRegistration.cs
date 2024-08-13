@@ -7,6 +7,7 @@ namespace CarShopWeb.Application.Registrations
     {
         public static void AddApplicationServices(this IServiceCollection services)
         {
+            
             ///services.AddPersistanceServices();
         }
     }

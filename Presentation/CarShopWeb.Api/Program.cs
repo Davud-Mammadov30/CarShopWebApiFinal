@@ -1,4 +1,4 @@
-using CarShopWeb.Application.Interfaces.IServices;
+using CarShopWeb.Persistence.Registrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddPersistanceServices();
+builder.Services.AddPersistanceServices(builder.Configuration);
 
 var app = builder.Build();
 
