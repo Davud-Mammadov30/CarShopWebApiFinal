@@ -11,5 +11,6 @@ namespace CarShopWeb.Domain.Entities.Identity
     {
         public string? RefreshToken { get; set; }
         public DateTime ExpiredDate { get; set; }
+        public DateTime RefreshTokenEndTime { get; set; }
     }
 }

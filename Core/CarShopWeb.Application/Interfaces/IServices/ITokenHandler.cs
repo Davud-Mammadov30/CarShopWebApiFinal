@@ -10,7 +10,7 @@ namespace CarShopWeb.Application.Interfaces.IServices
 {
     public interface ITokenHandler
     {
-        Task<TokenDTO> CreateToken(AppUser user);
+        Task<TokenDTO> CreateAccessToken(int minute,AppUser user);
         string CreateRefreshToken();
     }
 }
