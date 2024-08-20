@@ -38,7 +38,7 @@ namespace CarShopWeb.Api.Controllers
             var response = await _contactTypeService.UpdateContact(updateContactDTO, id);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var response = await _contactTypeService.GetContactById(id);

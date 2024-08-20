@@ -14,5 +14,7 @@ namespace CarShopWeb.Domain.Entities
         public DateTime OrderDate { get; set; }
         public decimal TotalPrice { get; set; }
         public IList<OrderDetails>? OrderDetails { get; set; }
+        public IList<Payments>? Payments { get; set; }
+        public Customers? Customers { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace CarShopWeb.Domain.Entities
         public int CustomerID { get; set; }
         public string Code { get; set; }
         public decimal Money { get; set; }
+        public Customers? Customers { get;}
     }
 }

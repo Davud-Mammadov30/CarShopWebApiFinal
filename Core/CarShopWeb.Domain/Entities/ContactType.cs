@@ -13,5 +13,6 @@ namespace CarShopWeb.Domain.Entities
         public string? Number { get; set; }
         public string? WhatsAppNumber { get; set; }
         public string? Email { get; set; }
+        public Customers? Customers { get; set; }
     }
 }

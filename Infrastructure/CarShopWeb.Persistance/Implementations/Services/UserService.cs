@@ -149,7 +149,7 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
             return responseModel;
         }
 
-        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate)
+        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate, int refreshTokenMoreLifeMinute)
         {
             if(user != null)
             {

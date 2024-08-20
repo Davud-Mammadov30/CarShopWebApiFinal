@@ -39,7 +39,7 @@ namespace CarShopWeb.Api.Controllers
             var response = await _userService.UpdateUserAsync(model);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRolesToUser(string userIdOrName)
         {
             var response = await _userService.GetRolesToUserAsync(userIdOrName);

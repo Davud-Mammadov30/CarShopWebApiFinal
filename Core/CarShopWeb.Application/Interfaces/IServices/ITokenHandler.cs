@@ -12,5 +12,6 @@ namespace CarShopWeb.Application.Interfaces.IServices
     {
         Task<TokenDTO> CreateAccessToken(int minute,AppUser user);
         string CreateRefreshToken();
+        string RefreshToken();
     }
 }

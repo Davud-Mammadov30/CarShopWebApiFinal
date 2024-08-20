@@ -39,7 +39,7 @@ namespace CarShopWeb.Api.Controllers
             var response = await _paymentsService.UpdatePayments(updatePaymentsDTO, id);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var response = await _paymentsService.GetPaymentsById(id);

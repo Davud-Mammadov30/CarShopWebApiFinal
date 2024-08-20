@@ -39,7 +39,7 @@ namespace CarShopWeb.Api.Controllers
             var response = await _featuresService.UpdateFeatures(updateFeaturesDTO, id);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var response = await _featuresService.GetFeaturesById(id);

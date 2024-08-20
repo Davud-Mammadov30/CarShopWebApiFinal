@@ -13,5 +13,7 @@ namespace CarShopWeb.Domain.Entities
         public decimal PaymentAmount { get; set; }
         public DateTime PaymentDate { get; set; }
         public string? PaymentMethod { get; set; }
+        public Orders? Orders { get; set; }
+
     }
 }
