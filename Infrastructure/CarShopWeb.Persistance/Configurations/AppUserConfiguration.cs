@@ -13,8 +13,34 @@ namespace CarShopWeb.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
-            builder.Property(x => x.UserName).IsRequired().HasMaxLength(30);
-            builder.Property(x => x.LastName).IsRequired().HasMaxLength(50);
+            // Set the primary key
+            builder.HasKey(u => u.Id);
+
+            // Configure properties
+            builder.Property(u => u.FirstName)
+                .IsRequired()
+                .HasMaxLength(50); // Set max length for FirstName
+
+            builder.Property(u => u.LastName)
+                .IsRequired()
+                .HasMaxLength(50); // Set max length for LastName
+
+            builder.Property(u => u.RefreshToken)
+                .HasMaxLength(200); // Set max length for RefreshToken
+
+            builder.Property(u => u.ExpiredDate)
+                .IsRequired(); // ExpiredDate is required
+
+            builder.Property(u => u.RefreshTokenEndTime)
+                .IsRequired(); // RefreshTokenEndTime is required
+
+            // Configure the relationship with Customers
+            builder.HasMany(u => u.Customers)
+                .WithOne(c => c.AppUser)
+                .HasForeignKey(c => c.AppUserID)
+                .OnDelete(DeleteBehavior.Restrict); // Adjust the delete behavior based on your needs
+
+            // Additional configuration if needed
         }
     }
 }

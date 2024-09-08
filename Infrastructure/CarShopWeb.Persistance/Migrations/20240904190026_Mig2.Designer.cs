@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarShopWeb.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240817143411_Mig2")]
+    [Migration("20240904190026_Mig2")]
     partial class Mig2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,22 +32,21 @@ namespace CarShopWeb.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AccountDetailId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Money")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountDetailId");
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("AccountDetail");
                 });
@@ -74,7 +73,11 @@ namespace CarShopWeb.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CarID");
+
                     b.HasIndex("CarsId");
+
+                    b.HasIndex("FeatureID");
 
                     b.HasIndex("FeaturesId");
 
@@ -93,25 +96,30 @@ namespace CarShopWeb.Persistence.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Engine")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EngineCylinder")
                         .HasColumnType("int");
 
                     b.Property<decimal>("EngineLiter")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(3,2)");
 
                     b.Property<int>("HorsePower")
                         .HasColumnType("int");
 
                     b.Property<string>("Model")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Torque")
                         .HasColumnType("int");
@@ -132,9 +140,6 @@ namespace CarShopWeb.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AccountDetailId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
@@ -149,7 +154,7 @@ namespace CarShopWeb.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountDetailId");
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("ContactType");
                 });
@@ -162,33 +167,30 @@ namespace CarShopWeb.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AccountDetailId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("AppUserID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ContactTypeId")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountDetailId");
-
-                    b.HasIndex("ContactTypeId");
+                    b.HasIndex("AppUserID");
 
                     b.ToTable("Customers");
                 });
@@ -205,10 +207,14 @@ namespace CarShopWeb.Persistence.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("FutureName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FutureType")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -254,9 +260,6 @@ namespace CarShopWeb.Persistence.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomersId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -266,6 +269,16 @@ namespace CarShopWeb.Persistence.Migrations
 
                     b.Property<DateTime>("ExpiredDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -291,7 +304,8 @@ namespace CarShopWeb.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("RefreshTokenEndTime")
                         .HasColumnType("datetime2");
@@ -307,8 +321,6 @@ namespace CarShopWeb.Persistence.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomersId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -332,9 +344,6 @@ namespace CarShopWeb.Persistence.Migrations
                     b.Property<int>("FeatureID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FeaturesId")
-                        .HasColumnType("int");
-
                     b.Property<int>("OrderID")
                         .HasColumnType("int");
 
@@ -343,7 +352,9 @@ namespace CarShopWeb.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FeaturesId");
+                    b.HasIndex("FeatureID");
+
+                    b.HasIndex("OrderID");
 
                     b.HasIndex("OrdersId");
 
@@ -367,15 +378,12 @@ namespace CarShopWeb.Persistence.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PaymentsId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PaymentsId");
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("Orders");
                 });
@@ -398,9 +406,12 @@ namespace CarShopWeb.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethod")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderID");
 
                     b.ToTable("Payments");
                 });
@@ -513,19 +524,35 @@ namespace CarShopWeb.Persistence.Migrations
 
             modelBuilder.Entity("CarShopWeb.Domain.Entities.AccountDetail", b =>
                 {
-                    b.HasOne("CarShopWeb.Domain.Entities.AccountDetail", null)
-                        .WithMany("Details")
-                        .HasForeignKey("AccountDetailId");
+                    b.HasOne("CarShopWeb.Domain.Entities.Customers", "Customers")
+                        .WithMany("AccountDetails")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("CarShopWeb.Domain.Entities.CarFeatures", b =>
                 {
-                    b.HasOne("CarShopWeb.Domain.Entities.Cars", "Cars")
+                    b.HasOne("CarShopWeb.Domain.Entities.Cars", null)
                         .WithMany("CarFeatures")
+                        .HasForeignKey("CarID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarShopWeb.Domain.Entities.Cars", "Cars")
+                        .WithMany()
                         .HasForeignKey("CarsId");
 
-                    b.HasOne("CarShopWeb.Domain.Entities.Features", "Features")
+                    b.HasOne("CarShopWeb.Domain.Entities.Features", null)
                         .WithMany("CarFeatures")
+                        .HasForeignKey("FeatureID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarShopWeb.Domain.Entities.Features", "Features")
+                        .WithMany()
                         .HasForeignKey("FeaturesId");
 
                     b.Navigation("Cars");
@@ -535,45 +562,41 @@ namespace CarShopWeb.Persistence.Migrations
 
             modelBuilder.Entity("CarShopWeb.Domain.Entities.ContactType", b =>
                 {
-                    b.HasOne("CarShopWeb.Domain.Entities.AccountDetail", null)
-                        .WithMany("ContactTypes")
-                        .HasForeignKey("AccountDetailId");
-                });
-
-            modelBuilder.Entity("CarShopWeb.Domain.Entities.Customers", b =>
-                {
-                    b.HasOne("CarShopWeb.Domain.Entities.AccountDetail", "AccountDetail")
-                        .WithMany()
-                        .HasForeignKey("AccountDetailId");
-
-                    b.HasOne("CarShopWeb.Domain.Entities.ContactType", "ContactType")
-                        .WithMany()
-                        .HasForeignKey("ContactTypeId");
-
-                    b.Navigation("AccountDetail");
-
-                    b.Navigation("ContactType");
-                });
-
-            modelBuilder.Entity("CarShopWeb.Domain.Entities.Identity.AppUser", b =>
-                {
                     b.HasOne("CarShopWeb.Domain.Entities.Customers", "Customers")
-                        .WithMany("appUsers")
-                        .HasForeignKey("CustomersId")
+                        .WithMany("ContactTypes")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customers");
                 });
 
+            modelBuilder.Entity("CarShopWeb.Domain.Entities.Customers", b =>
+                {
+                    b.HasOne("CarShopWeb.Domain.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("Customers")
+                        .HasForeignKey("AppUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("CarShopWeb.Domain.Entities.OrderDetails", b =>
                 {
                     b.HasOne("CarShopWeb.Domain.Entities.Features", "Features")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("FeaturesId");
+                        .HasForeignKey("FeatureID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarShopWeb.Domain.Entities.Orders", null)
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CarShopWeb.Domain.Entities.Orders", "Orders")
-                        .WithMany("OrderDetails")
+                        .WithMany()
                         .HasForeignKey("OrdersId");
 
                     b.Navigation("Features");
@@ -583,11 +606,24 @@ namespace CarShopWeb.Persistence.Migrations
 
             modelBuilder.Entity("CarShopWeb.Domain.Entities.Orders", b =>
                 {
-                    b.HasOne("CarShopWeb.Domain.Entities.Payments", "Payments")
+                    b.HasOne("CarShopWeb.Domain.Entities.Customers", "Customers")
                         .WithMany("Orders")
-                        .HasForeignKey("PaymentsId");
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Payments");
+                    b.Navigation("Customers");
+                });
+
+            modelBuilder.Entity("CarShopWeb.Domain.Entities.Payments", b =>
+                {
+                    b.HasOne("CarShopWeb.Domain.Entities.Orders", "Orders")
+                        .WithMany("Payments")
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -641,13 +677,6 @@ namespace CarShopWeb.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CarShopWeb.Domain.Entities.AccountDetail", b =>
-                {
-                    b.Navigation("ContactTypes");
-
-                    b.Navigation("Details");
-                });
-
             modelBuilder.Entity("CarShopWeb.Domain.Entities.Cars", b =>
                 {
                     b.Navigation("CarFeatures");
@@ -655,7 +684,11 @@ namespace CarShopWeb.Persistence.Migrations
 
             modelBuilder.Entity("CarShopWeb.Domain.Entities.Customers", b =>
                 {
-                    b.Navigation("appUsers");
+                    b.Navigation("AccountDetails");
+
+                    b.Navigation("ContactTypes");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("CarShopWeb.Domain.Entities.Features", b =>
@@ -665,14 +698,16 @@ namespace CarShopWeb.Persistence.Migrations
                     b.Navigation("OrderDetails");
                 });
 
+            modelBuilder.Entity("CarShopWeb.Domain.Entities.Identity.AppUser", b =>
+                {
+                    b.Navigation("Customers");
+                });
+
             modelBuilder.Entity("CarShopWeb.Domain.Entities.Orders", b =>
                 {
                     b.Navigation("OrderDetails");
-                });
 
-            modelBuilder.Entity("CarShopWeb.Domain.Entities.Payments", b =>
-                {
-                    b.Navigation("Orders");
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }
