@@ -17,10 +17,12 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
-        public UserService(UserManager<AppUser> userManager, IMapper mapper)
+        private readonly RoleManager<AppRole> _roleManager;
+        public UserService(UserManager<AppUser> userManager, IMapper mapper, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
         public async Task<ResponseModel<bool>> AssignRoletoUserAsync(string userId, string[] roles)
         {
@@ -33,13 +35,17 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
             if (appUser != null)
             {
                 var userRole = await _userManager.GetRolesAsync(appUser);
-                await _userManager.RemoveFromRolesAsync(appUser, userRole);
-                IdentityResult result = await _userManager.AddToRolesAsync(appUser, roles);
-                if (result.Succeeded)
+                if(!userRole.SequenceEqual(roles))
                 {
-                    responseModel.Data = true;
-                    responseModel.StatusCode = 200;
+                    await _userManager.RemoveFromRolesAsync(appUser, userRole);
+                    IdentityResult result = await _userManager.AddToRolesAsync(appUser, roles);
+                    if (result.Succeeded)
+                    {
+                        responseModel.Data = true;
+                        responseModel.StatusCode = 200;
+                    }
                 }
+                
             }
             return responseModel;
         }
@@ -51,6 +57,7 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
                 Data = null,
                 StatusCode = 400
             };
+
             CreateUserResponseDTO responseDTO = new CreateUserResponseDTO()
             {
                 Message = "User not created",
@@ -58,30 +65,34 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
             };
             if (model != null)
             {
-                var user = _mapper.Map<AppUser>(model);
-                user.Id = Guid.NewGuid().ToString();
+                var user = _mapper.Map<AppUser>(model);//Mapper lazim burda yoxsa elle maplemeliyik?
+                user.Id = Guid.NewGuid().ToString(); // Ensure Id is set
                 IdentityResult result = await _userManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)
                 {
                     responseDTO.Message = string.Join("\n", result.Errors.Select(error => $"{error.Code}-{error.Description}"));
                 }
+
                 responseDTO.Message = "User created successfully";
                 responseDTO.Succeeded = true;
 
+
                 responseModel.Data = responseDTO;
-                responseModel.StatusCode = 200;
+                responseModel.StatusCode = 201;
             }
-            AppUser appUser = await _userManager.FindByNameAsync(model.UserName);
-            if (appUser == null)
+            AppUser _user = await _userManager.FindByNameAsync(model.UserName);
+            if (_user == null)
             {
-                appUser = await _userManager.FindByEmailAsync(model.Email);
-                if (appUser == null)
+                _user = await _userManager.FindByEmailAsync(model.Email);
+                if (_user == null)
                 {
-                    appUser = await _userManager.FindByIdAsync(appUser.Id);
+                    _user = await _userManager.FindByIdAsync(_user.Id);
+
                 }
+
             }
-            if (appUser != null)
-                await _userManager.AddToRoleAsync(appUser, "User");
+            if (_user != null)
+                await _userManager.AddToRoleAsync(_user, "User");
 
             return responseModel;
         }
@@ -149,7 +160,7 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
             return responseModel;
         }
 
-        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate, int refreshTokenMoreLifeMinute)
+        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate)
         {
             if(user != null)
             {

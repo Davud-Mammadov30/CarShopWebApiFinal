@@ -11,6 +11,7 @@ using Serilog.Events;
 using Microsoft.VisualBasic;
 using System.Data;
 using System.Collections.ObjectModel;
+using CarShopWeb.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +70,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.ConfigureExceptionHandler();
 
 app.UseAuthorization();
 app.Use(async (context, next) =>

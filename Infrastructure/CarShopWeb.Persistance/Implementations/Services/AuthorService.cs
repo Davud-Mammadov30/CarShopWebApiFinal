@@ -19,17 +19,15 @@ namespace CarShopWeb.Persistence.Implementations.Services
         readonly SignInManager<AppUser> _signInManager;
         readonly ITokenHandler _tokenHandler;
         readonly IUserService _userService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         public AuthorService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            ITokenHandler tokenHandler, IUserService userService, IHttpContextAccessor httpContextAccessor = null)
+            ITokenHandler tokenHandler, IUserService userService)
         {
-            _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenHandler = tokenHandler;
             _userService = userService;
         }
-        public async Task<ResponseModel<TokenDTO>> LoginAsync(string userNameOrEmail, string password, int accessTokenLifeTime, int refreshTokenMoreLife)
+        public async Task<ResponseModel<TokenDTO>> LoginAsync(string userNameOrEmail, string password)
         {
             ResponseModel<TokenDTO> responseModel = new ResponseModel<TokenDTO>()
             {
@@ -50,8 +48,8 @@ namespace CarShopWeb.Persistence.Implementations.Services
                 SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
                 if (result.Succeeded)
                 {
-                    TokenDTO tokenDTO = await _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
-                    await _userService.UpdateRefreshToken(tokenDTO.RefreshToken, user, tokenDTO.ExpirationTime, accessTokenLifeTime);
+                    TokenDTO tokenDTO = await _tokenHandler.CreateAccessToken(user);
+                    await _userService.UpdateRefreshToken(tokenDTO.RefreshToken, user, tokenDTO.ExpirationTime);
                     responseModel.Data = tokenDTO;
                     responseModel.StatusCode = 200;
                 }
@@ -60,14 +58,15 @@ namespace CarShopWeb.Persistence.Implementations.Services
                     responseModel.StatusCode = 401;
                 }
             }
-            catch 
+            catch(Exception ex)
             {
                 responseModel.StatusCode = 500;
+                responseModel.Message = $"Error: {ex.Message}, StackTrace: {ex.StackTrace}";
             }
             return responseModel;
         }
 
-        public async Task<ResponseModel<TokenDTO>> LoginWithRefreshTokenAsync(string refreshToken, int accessTokenLifeTime, int refreshTokenMoreLife)
+        public async Task<ResponseModel<TokenDTO>> LoginWithRefreshTokenAsync(string refreshToken)
         {
             ResponseModel<TokenDTO> responseModel = new ResponseModel<TokenDTO>()
             {
@@ -79,8 +78,8 @@ namespace CarShopWeb.Persistence.Implementations.Services
                 AppUser? user = await _userManager.Users.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken);
                 if (user != null && user?.RefreshTokenEndTime> DateTime.UtcNow)
                 {
-                    TokenDTO tokenDTO = await _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
-                    await _userService.UpdateRefreshToken(tokenDTO.RefreshToken,user, tokenDTO.ExpirationTime, refreshTokenMoreLife);
+                    TokenDTO tokenDTO = await _tokenHandler.CreateAccessToken(user);
+                    await _userService.UpdateRefreshToken(tokenDTO.RefreshToken,user, tokenDTO.ExpirationTime);
                     responseModel.Data = tokenDTO;
                     responseModel.StatusCode = 200;
                 }

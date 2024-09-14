@@ -1,5 +1,6 @@
 ﻿using CarShopWeb.Application.Interfaces.IServices;
 using CarShopWeb.Application.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace CarShopWeb.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;

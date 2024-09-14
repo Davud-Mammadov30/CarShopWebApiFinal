@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CarShopWeb.Persistence.Registrations
 {
@@ -28,10 +29,12 @@ namespace CarShopWeb.Persistence.Registrations
             services.AddScoped<IContactTypeService, ContactTypeService>();
             services.AddScoped<ICustomersService, CustomersService>();
             services.AddScoped<IUnitofwork, Unitofwork>();
+           
             services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
             services.AddDbContext<ApplicationDBContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("ConnectionDefault")));
+
             //var reg = new Class1();
             //reg.Class(services);
         }

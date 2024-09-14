@@ -26,10 +26,10 @@ namespace CarShopWeb.Infrastructure.Implementations
             _userManager = userManager;
         }
 
-        public async Task<TokenDTO> CreateAccessToken(int minute, AppUser user)
+        public async Task<TokenDTO> CreateAccessToken(AppUser user)
         {
             TokenDTO tokenDTO = new TokenDTO();
-            SymmetricSecurityKey SecurityKey = new(Encoding.UTF8.GetBytes(_configuration["Token:SecurityKey"]));
+            SymmetricSecurityKey SecurityKey = new(Encoding.UTF8.GetBytes(_configuration["JWT:SecurityKey"]));
             SigningCredentials signingCredentials = new(SecurityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
@@ -40,10 +40,10 @@ namespace CarShopWeb.Infrastructure.Implementations
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            tokenDTO.ExpirationTime = DateTime.UtcNow.AddMinutes(minute);
+            tokenDTO.ExpirationTime = DateTime.UtcNow.AddMinutes(5);
             JwtSecurityToken securityToken = new(
-                audience: _configuration["Token:Audience"],
-                issuer: _configuration["Token:Issure"],
+                audience: _configuration["JWT:Audience"],
+                issuer: _configuration["JWT:Issure"],
                 expires: tokenDTO.ExpirationTime, //life time
                 notBefore: DateTime.UtcNow, //islemeye baslayacagi vaxt
                 signingCredentials: signingCredentials,
@@ -63,7 +63,7 @@ namespace CarShopWeb.Infrastructure.Implementations
         public string CreateRefreshToken()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Token:RefreshTokenSecret"]); // Refresh token için gizli sifre
+            var key = Encoding.ASCII.GetBytes(_configuration["JWT:RefreshTokenSecret"]); // Refresh token için gizli sifre
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -73,14 +73,5 @@ namespace CarShopWeb.Infrastructure.Implementations
             return tokenHandler.WriteToken(refreshToken);
         }
 
-        public string RefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
-        }
     }
 }

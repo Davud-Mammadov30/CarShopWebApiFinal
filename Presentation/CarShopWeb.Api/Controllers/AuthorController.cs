@@ -14,15 +14,15 @@ namespace CarShopWeb.Api.Controllers
             _authorService = authorService;
         }
         [HttpPost("[action]")]
-        public async Task<IActionResult> LoginAsync(string userNameOrEmail, string password, int accessTokenLifeTime, int refreshTokenMoreLife)
+        public async Task<IActionResult> LoginAsync(string userNameOrEmail, string password)
         {
-            var data = await _authorService.LoginAsync(userNameOrEmail, password, accessTokenLifeTime, refreshTokenMoreLife);
+            var data = await _authorService.LoginAsync(userNameOrEmail, password);
             return StatusCode(data.StatusCode, data);
         }
         [HttpPost("[action]")]
-        public async Task<IActionResult> LoginWithRefreshTokenAsync(string refreshToken, int accessTokenLifeTime, int refreshTokenMoreLife)
+        public async Task<IActionResult> LoginWithRefreshTokenAsync(string refreshToken)
         {
-            var data = await _authorService.LoginWithRefreshTokenAsync(refreshToken, accessTokenLifeTime, refreshTokenMoreLife);
+            var data = await _authorService.LoginWithRefreshTokenAsync(refreshToken);
             return StatusCode(data.StatusCode, data);
         }
         [HttpPut("[action]")]

@@ -16,7 +16,7 @@ namespace CarShopWeb.Api.Registrations
             })
             .AddJwtBearer(options =>
             {
-                var Key = Encoding.UTF8.GetBytes(configuration["JWT:Key"]);
+                var Key = Encoding.UTF8.GetBytes(configuration["JWT:SecurityKey"]);
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

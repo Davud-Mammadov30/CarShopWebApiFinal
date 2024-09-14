@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace CarShopWeb.Application.Models
 {
-    public class ResponseModel<T>
+    public class ErrorDetails
     {
-        public T Data { get; set; }
         public int StatusCode { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
     }
 }

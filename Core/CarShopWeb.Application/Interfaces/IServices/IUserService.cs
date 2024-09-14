@@ -11,7 +11,7 @@ namespace CarShopWeb.Application.Interfaces.IServices
 {
     public interface IUserService
     {
-        Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate, int refreshTokenMoreLifeMinute);
+        Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate);
         public Task<ResponseModel<bool>> AssignRoletoUserAsync(string userId, string[] roles);
         Task<ResponseModel<CreateUserResponseDTO>> CreateAsync(CreateUserDTO model);
         public Task<ResponseModel<List<UserGetDTO>>> GetAllUsersAsync();
