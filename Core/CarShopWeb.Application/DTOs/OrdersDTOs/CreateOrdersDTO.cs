@@ -12,5 +12,6 @@ namespace CarShopWeb.Application.DTOs.OrdersDTOs
         public int CarID { get; set; }
         public DateTime OrderDate { get; set; }
         public decimal TotalPrice { get; set; }
+        public List<int> SelectedFeatureIDs { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarShopWeb.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,8 @@ namespace CarShopWeb.Application.DTOs.CarsDTOs
 {
     public class GetCarsDTO
     {
-        public int CarID { get; set; }
-        public string? Brand { get; set; }
-        public string? Model { get; set; }
+        public int Id { get; set; }
+        public int CarModelID { get; set; }
         public int Year { get; set; }
         public decimal BasePrice { get; set; }
         public DateTime DateAdded { get; set; }

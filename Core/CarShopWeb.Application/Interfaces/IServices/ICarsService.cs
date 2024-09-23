@@ -15,5 +15,6 @@ namespace CarShopWeb.Application.Interfaces.IServices
         Task<ResponseModel<bool>> UpdateCars(UpdateCarsDTO updateCarsDTO,int id);
         Task<ResponseModel<bool>> DeleteCars(int id);
         Task<ResponseModel<GetCarsDTO>> GetCarsById(int id);
+        Task<ResponseModel<List<GetCarsDTO>>> MostExpensiveCars();
     }
 }

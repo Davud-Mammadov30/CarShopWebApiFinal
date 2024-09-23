@@ -135,6 +135,28 @@ namespace CarShopWeb.Persistence.Implementations.Services
             return responseModel;
         }
 
+        public async Task<ResponseModel<List<GetCarsDTO>>> MostExpensiveCars()
+        {
+            ResponseModel<List<GetCarsDTO>> responseModel = new ResponseModel<List<GetCarsDTO>>()
+            {
+                Data = null,
+                StatusCode = 400
+            };
+            try
+            {
+                var cars = await _unitofWork.GetRepositories<Cars>().GetAll().OrderByDescending(x => x.BasePrice)
+                    .ToListAsync();
+                var carsdto = _mapper.Map<List<GetCarsDTO>>(cars);
+                responseModel.Data = carsdto;
+                responseModel.StatusCode = 200;
+            }
+            catch
+            {
+                responseModel.StatusCode = 500;
+            }
+            return responseModel;
+        }
+
         public async Task<ResponseModel<bool>> UpdateCars(UpdateCarsDTO updateCarsDTO, int id)
         {
             ResponseModel<bool> responseModel = new ResponseModel<bool>()

@@ -29,7 +29,8 @@ namespace CarShopWeb.Persistence.Registrations
             services.AddScoped<IContactTypeService, ContactTypeService>();
             services.AddScoped<ICustomersService, CustomersService>();
             services.AddScoped<IUnitofwork, Unitofwork>();
-           
+            services.AddScoped<ICarBrandService, CarBrandService>();
+            services.AddScoped<ICarModelService, CarModelService>();
             services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<ApplicationDBContext>()
                 .AddDefaultTokenProviders();
             services.AddDbContext<ApplicationDBContext>(options =>

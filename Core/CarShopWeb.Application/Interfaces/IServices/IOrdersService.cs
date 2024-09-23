@@ -15,5 +15,6 @@ namespace CarShopWeb.Application.Interfaces.IServices
         Task<ResponseModel<bool>> UpdateOrders(UpdateOrdersDTO updateOrdersDTO,int id);
         Task<ResponseModel<bool>> DeleteOrders(int id);
         Task<ResponseModel<GetOrdersDTO>> GetOrdersById(int id);
+        Task<ResponseModel<List<GetOrdersDTO>>> GetTopPriceOrders();
     }
 }

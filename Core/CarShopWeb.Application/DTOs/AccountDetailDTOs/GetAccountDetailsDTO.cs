@@ -8,7 +8,7 @@ namespace CarShopWeb.Application.DTOs.AccountDetailDTOs
 {
     public class GetAccountDetailsDTO
     {
-        public int AccountID { get; set; }
+        public int Id { get; set; }
         public int CustomerID { get; set; }
         public string Code { get; set; }
         public decimal Money { get; set; }

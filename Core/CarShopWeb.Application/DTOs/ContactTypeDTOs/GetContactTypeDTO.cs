@@ -8,7 +8,7 @@ namespace CarShopWeb.Application.DTOs.ContactTypeDTOs
 {
     public class GetContactTypeDTO
     {
-        public int ContactID { get; set; }
+        public int Id { get; set; }
         public int CustomerID { get; set; }
         public string? Number { get; set; }
         public string? WhatsAppNumber { get; set; }

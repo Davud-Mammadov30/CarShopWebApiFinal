@@ -12,13 +12,8 @@ namespace CarShopWeb.Application.Validations.CarsValidator
     {
         public CreateCarValidator() 
         {
-            RuleFor(x => x.Brand)
-            .NotEmpty().WithMessage("Brand is required.")
-            .Length(2, 50).WithMessage("Brand must be between 2 and 50 characters.");
-
-            RuleFor(x => x.Model)
-                .NotEmpty().WithMessage("Model is required.")
-                .Length(1, 50).WithMessage("Model must be between 1 and 50 characters.");
+            RuleFor(x => x.CarModelID)
+                .GreaterThan(0).WithMessage("Car model ID is required.");
 
             RuleFor(x => x.Year)
                 .InclusiveBetween(1886, DateTime.Now.Year + 1)

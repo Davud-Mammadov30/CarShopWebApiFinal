@@ -16,35 +16,30 @@ namespace CarShopWeb.Persistence.Configurations
         {
             builder.HasKey(o => o.Id);
 
-            // Property configurations
-            builder.Property(o => o.CustomerID)
-                .IsRequired();
+            builder.Property(o => o.CustomerID).IsRequired();
+            builder.Property(o => o.CarID).IsRequired();
+            builder.Property(o => o.OrderDate).IsRequired();
+            builder.Property(o => o.TotalPrice).IsRequired().HasColumnType("decimal(18,2)");
 
-            builder.Property(o => o.CarID)
-                .IsRequired();
-
-            builder.Property(o => o.OrderDate)
-                .IsRequired();
-
-            builder.Property(o => o.TotalPrice)
-                .IsRequired()
-                .HasColumnType("decimal(18,2)");
-
-            // Relationships
             builder.HasOne(o => o.Customers)
-                .WithMany(c => c.Orders) // Assuming Customers has a collection of Orders
-                .HasForeignKey(o => o.CustomerID)
-                .OnDelete(DeleteBehavior.Cascade); // Adjust delete behavior if needed
+                   .WithMany(c => c.Orders)  // Use the correct navigation property
+                   .HasForeignKey(o => o.CustomerID)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(o => o.Cars)
+                   .WithMany()  // You can configure navigation on Cars as needed
+                   .HasForeignKey(o => o.CarID)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(o => o.OrderDetails)
-                .WithOne() // Assuming OrderDetails has a navigation property to Orders if needed
-                .HasForeignKey(od => od.OrderID) // Ensure that OrderDetails has a foreign key property
-                .OnDelete(DeleteBehavior.Cascade); // Adjust delete behavior if needed
+                   .WithOne(od => od.Orders)  // Explicitly define the navigation property
+                   .HasForeignKey(od => od.OrderID)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(o => o.Payments)
-                .WithOne() // Assuming Payments has a navigation property to Orders if needed
-                .HasForeignKey(p => p.OrderID) // Ensure that Payments has a foreign key property
-                .OnDelete(DeleteBehavior.Cascade);
+                   .WithOne()  // Assuming Payments has a relationship to Orders
+                   .HasForeignKey(p => p.OrderID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

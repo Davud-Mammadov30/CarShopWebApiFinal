@@ -29,28 +29,58 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
                 Data = null,
                 StatusCode = 400
             };
+
             try
             {
                 if (createOrdersDTO != null)
                 {
+                    // Get the car details including its base price
+                    var car = await _unitofWork.GetRepositories<Cars>()
+                        .GetByIdAsync(createOrdersDTO.CarID);
+
+                    if (car == null)
+                    {
+                        responseModel.StatusCode = 404;
+                        return responseModel;
+                    }
+
+                    // Fetch selected features and calculate additional price
+                    var selectedFeatureIds = createOrdersDTO.SelectedFeatureIDs; // Assuming SelectedFeatureIDs is passed
+                    var selectedFeatures = await _unitofWork.GetRepositories<CarFeatures>()
+                        .Table
+                        .Where(cf => selectedFeatureIds.Contains(cf.FeatureID) && cf.CarID == createOrdersDTO.CarID)
+                        .Include(cf => cf.Features) // Include the Feature entity for accessing AdditionalPrice
+                        .ToListAsync();
+
+                    var additionalPrice = selectedFeatures.Sum(cf => cf.Features.AdditionalPrice);
+
+                    // Calculate the total price
+                    var totalPrice = car.BasePrice + additionalPrice;
+
+                    // Map the order DTO to the Orders entity
                     var data = _mapper.Map<Orders>(createOrdersDTO);
+                    data.TotalPrice = totalPrice;  // Set total price in the order
+
+                    // Save the order
                     await _unitofWork.GetRepositories<Orders>().AddAsync(data);
-                    int rowsaffected = await _unitofWork.SaveChangesAsync();
-                    if (rowsaffected > 0)
+                    int rowsAffected = await _unitofWork.SaveChangesAsync();
+
+                    if (rowsAffected > 0)
                     {
                         responseModel.Data = createOrdersDTO;
                         responseModel.StatusCode = 200;
                     }
                     else
                     {
-                        responseModel.StatusCode = 500;
+                        responseModel.StatusCode = 500; // Internal error
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                responseModel.StatusCode = 500;
+                responseModel.StatusCode = 500; // Error occurred
             }
+
             return responseModel;
         }
 
@@ -127,6 +157,28 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
                 {
                     responseModel.StatusCode = 500;
                 }
+            }
+            catch
+            {
+                responseModel.StatusCode = 500;
+            }
+            return responseModel;
+        }
+
+        public async Task<ResponseModel<List<GetOrdersDTO>>> GetTopPriceOrders()
+        {
+            ResponseModel<List<GetOrdersDTO>> responseModel = new ResponseModel<List<GetOrdersDTO>>()
+            {
+                Data = null,
+                StatusCode = 400
+            };
+            try
+            {
+                var orders = await _unitofWork.GetRepositories<Orders>().GetAll().OrderByDescending(
+                    o => o.TotalPrice).Take(10).ToListAsync();
+                var ordersdto = _mapper.Map<List<GetOrdersDTO>>(orders);
+                responseModel.Data = ordersdto;
+                responseModel.StatusCode = 200;
             }
             catch
             {

@@ -31,20 +31,45 @@ namespace CarShopWeb.Persistence.Implementations.Services
             };
             try
             {
-                if(createPaymentsDTO != null)
+                var order = await _unitofWork.GetRepositories<Orders>()
+                    .GetByIdAsync(createPaymentsDTO.OrderID);
+
+                if (order == null)
                 {
-                    var data = _mapper.Map<Payments>(createPaymentsDTO);
-                    await _unitofWork.GetRepositories<Payments>().AddAsync(data);
-                    int rowsaffected = await _unitofWork.SaveChangesAsync();
-                    if(rowsaffected > 0)
+                    responseModel.StatusCode = 404;
+                    return responseModel;
+                }
+
+                // Ensure the payment amount matches the total order price
+                if (createPaymentsDTO.PaymentAmount != order.TotalPrice)
+                {
+                    responseModel.StatusCode = 400; // Payment amount mismatch
+                    return responseModel;
+                }
+
+                // Deduct money from customer's account
+                var customerAccount = await _unitofWork.GetRepositories<AccountDetail>()
+                    .Table
+                    .FirstOrDefaultAsync(acc => acc.CustomerID == order.CustomerID);
+
+                if (customerAccount != null && customerAccount.Money >= createPaymentsDTO.PaymentAmount)
+                {
+                    customerAccount.Money -= createPaymentsDTO.PaymentAmount;
+
+                    // Create payment record
+                    var payment = _mapper.Map<Payments>(createPaymentsDTO);
+                    await _unitofWork.GetRepositories<Payments>().AddAsync(payment);
+
+                    int rowsAffected = await _unitofWork.SaveChangesAsync();
+                    if (rowsAffected > 0)
                     {
                         responseModel.Data = createPaymentsDTO;
                         responseModel.StatusCode = 200;
                     }
-                    else
-                    {
-                        responseModel.StatusCode = 500;
-                    }
+                }
+                else
+                {
+                    responseModel.StatusCode = 400; // Not enough money in the account
                 }
             }
             catch
@@ -133,6 +158,36 @@ namespace CarShopWeb.Persistence.Implementations.Services
                 else
                 {
                     responseModel.StatusCode = 500;
+                }
+            }
+            catch
+            {
+                responseModel.StatusCode = 500;
+            }
+            return responseModel;
+        }
+
+        public async Task<ResponseModel<GetPaymentsDTO>> MaximumPayment()
+        {
+            ResponseModel<GetPaymentsDTO> responseModel = new ResponseModel<GetPaymentsDTO>()
+            {
+                Data = null,
+                StatusCode = 400
+            };
+            try
+            {
+                var maxpayment = await _unitofWork.GetRepositories<Payments>().GetAll().MaxAsync(x => x.PaymentAmount);
+                var payment = await _unitofWork.GetRepositories<Payments>().GetAll().FirstOrDefaultAsync(x =>
+                x.PaymentAmount == maxpayment);
+                if(payment != null)
+                {
+                    var paymentdto = _mapper.Map<GetPaymentsDTO>(payment);
+                    responseModel.Data = paymentdto;
+                    responseModel.StatusCode = 200;
+                }
+                else
+                {
+                    responseModel.StatusCode = 404;
                 }
             }
             catch

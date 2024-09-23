@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CarShopWeb.Application.DTOs.AccountDetailDTOs;
+using CarShopWeb.Application.DTOs.CarBrandDTOs;
+using CarShopWeb.Application.DTOs.CarModelDTOs;
 using CarShopWeb.Application.DTOs.CarsDTOs;
 using CarShopWeb.Application.DTOs.ContactTypeDTOs;
 using CarShopWeb.Application.DTOs.CustomersDTOs;
@@ -45,6 +47,12 @@ namespace CarShopWeb.Application.Automapper
             CreateMap<AppUser, CreateUserDTO>().ReverseMap();
             CreateMap<AppUser, UserGetDTO>().ReverseMap();
             CreateMap<AppUser, UserUpdateDTO>().ReverseMap();
+            CreateMap<CarBrand,CreateCarBrandDTO>().ReverseMap();
+            CreateMap<CarBrand, GetCarBrandDTO>().ReverseMap();
+            CreateMap<CarBrand, UpdateCarBrandDTO>().ReverseMap();
+            CreateMap<CarModel, CreateCarModelDTO>().ReverseMap();
+            CreateMap<CarModel, GetCarModelDTO>().ReverseMap();
+            CreateMap<CarModel, UpdateCarModelDTO>().ReverseMap();
         }
     }
 }

@@ -8,10 +8,11 @@ namespace CarShopWeb.Application.DTOs.CustomersDTOs
 {
     public class CustomersGetDTO
     {
-        public int CustomerID { get; set; }
+        public int Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
+        public string? AppUserID { get; set; }
     }
 }

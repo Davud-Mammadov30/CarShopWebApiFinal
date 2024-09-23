@@ -186,7 +186,10 @@ namespace CarShopWeb.Infrastructure.Implementations.Services
                 }
                 else
                 {
-                    user =  _mapper.Map<AppUser>(model);
+                    user.UserName = model.UserName;
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.Email = model.Email;
                     var result = await _userManager.UpdateAsync(user);
                     if(result.Succeeded) 
                     {

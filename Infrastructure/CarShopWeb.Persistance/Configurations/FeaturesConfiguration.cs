@@ -33,12 +33,12 @@ namespace CarShopWeb.Persistence.Configurations
 
             // Configuring relationships
             builder.HasMany(f => f.CarFeatures)
-                .WithOne()
+                .WithOne(cf => cf.Features)
                 .HasForeignKey(cf => cf.FeatureID)
                 .OnDelete(DeleteBehavior.Cascade); // Adjust delete behavior as needed.
 
             builder.HasMany(f => f.OrderDetails)
-                .WithOne()
+                .WithOne(od => od.Features)
                 .HasForeignKey(od => od.FeatureID)
                 .OnDelete(DeleteBehavior.Cascade); // Adjust delete behavior as needed.
         }

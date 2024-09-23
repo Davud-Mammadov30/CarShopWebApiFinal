@@ -1,5 +1,6 @@
 ﻿using CarShopWeb.Application.Interfaces.IServices;
 using CarShopWeb.Application.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace CarShopWeb.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;

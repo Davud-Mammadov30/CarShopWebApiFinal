@@ -8,7 +8,7 @@ namespace CarShopWeb.Application.DTOs.FeaturesDTOs
 {
     public class GetFeaturesDTO
     {
-        public int FeatureID { get; set; }
+        public int Id { get; set; }
         public string? FutureType { get; set; }
         public string? FutureName { get; set; }
         public decimal AdditionalPrice { get; set; }

@@ -9,8 +9,8 @@ namespace CarShopWeb.Domain.Entities
 {
     public class Cars : BaseEntity
     {
-        public string? Brand { get; set; }
-        public string? Model { get; set; }
+        public int CarModelID { get; set; }
+        public CarModel CarModel { get; set; }
         public int Year { get; set; }
         public decimal BasePrice { get; set; }
         public DateTime DateAdded { get; set; }

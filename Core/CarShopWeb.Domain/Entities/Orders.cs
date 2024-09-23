@@ -16,5 +16,6 @@ namespace CarShopWeb.Domain.Entities
         public IList<OrderDetails>? OrderDetails { get; set; }
         public IList<Payments>? Payments { get; set; }
         public Customers? Customers { get; set; }
+        public Cars? Cars { get; set; }
     }
 }

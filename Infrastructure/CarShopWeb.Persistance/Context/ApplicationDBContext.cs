@@ -11,6 +11,8 @@ namespace CarShopWeb.Persistence.Context
         {
             
         }
+        public DbSet<CarModel> CarModel { get; set; }
+        public DbSet<CarBrand> CarBrand { get; set; }
         public DbSet<Cars> Cars { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<Payments> Payments { get; set; }

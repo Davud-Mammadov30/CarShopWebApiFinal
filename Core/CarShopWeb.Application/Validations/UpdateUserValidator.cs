@@ -18,6 +18,18 @@ namespace CarShopWeb.Application.Validations
             RuleFor(x => x.UserName)
                 .NotEmpty().WithMessage("Username is required.")
                 .Length(3, 50).WithMessage("Username must be between 3 and 50 characters.");
+
+            RuleFor(x => x.FirstName)
+                .NotEmpty().WithMessage("Firstname is required.")
+                .Length(3, 50).WithMessage("Firstname must be between 3 and 50 characters.");
+
+            RuleFor(x => x.LastName)
+                .NotEmpty().WithMessage("Lastname is required.")
+                .Length(3, 50).WithMessage("Lastname must be between 3 and 50 characters.");
+
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required.")
+                .EmailAddress().WithMessage("Invalid email format.");
         }
     }
 }

@@ -14,20 +14,10 @@ namespace CarShopWeb.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Cars> builder)
         {
-
-
             // Configuring primary key
             builder.HasKey(c => c.Id);
 
-            // Setting up properties with constraints
-            builder.Property(c => c.Brand)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            builder.Property(c => c.Model)
-                .IsRequired()
-                .HasMaxLength(100);
-
+            // Configuring properties
             builder.Property(c => c.Year)
                 .IsRequired();
 
@@ -56,9 +46,14 @@ namespace CarShopWeb.Persistence.Configurations
 
             // Configuring relationships
             builder.HasMany(c => c.CarFeatures)
-                .WithOne()
+                .WithOne(cf => cf.Cars)
                 .HasForeignKey(cf => cf.CarID)
-                .OnDelete(DeleteBehavior.Cascade); // Adjust delete behavior based on your needs.
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(c => c.CarModel)
+                .WithMany(cm => cm.Cars)
+                .HasForeignKey(c => c.CarModelID)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

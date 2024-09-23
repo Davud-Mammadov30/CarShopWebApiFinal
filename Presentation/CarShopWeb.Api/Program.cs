@@ -12,12 +12,17 @@ using Microsoft.VisualBasic;
 using System.Data;
 using System.Collections.ObjectModel;
 using CarShopWeb.Api.Extensions;
+using CarShopWeb.Application.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();/*.AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<>);*/
+builder.Services.AddControllers()
+    .AddFluentValidation(config =>
+    {
+        config.RegisterValidatorsFromAssemblyContaining<CreateUserValidator>();
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 

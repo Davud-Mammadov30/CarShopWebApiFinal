@@ -54,25 +54,16 @@ namespace CarShopWeb.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cars",
+                name: "CarBrand",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Brand = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Model = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    BasePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HorsePower = table.Column<int>(type: "int", nullable: false),
-                    Engine = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    EngineCylinder = table.Column<int>(type: "int", nullable: false),
-                    EngineLiter = table.Column<decimal>(type: "decimal(3,2)", nullable: false),
-                    Torque = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cars", x => x.Id);
+                    table.PrimaryKey("PK_CarBrand", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,41 +211,23 @@ namespace CarShopWeb.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CarFeatures",
+                name: "CarModel",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CarID = table.Column<int>(type: "int", nullable: false),
-                    CarsId = table.Column<int>(type: "int", nullable: true),
-                    FeatureID = table.Column<int>(type: "int", nullable: false),
-                    FeaturesId = table.Column<int>(type: "int", nullable: true)
+                    CarBrandID = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarFeatures", x => x.Id);
+                    table.PrimaryKey("PK_CarModel", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CarFeatures_Cars_CarID",
-                        column: x => x.CarID,
-                        principalTable: "Cars",
+                        name: "FK_CarModel_CarBrand_CarBrandID",
+                        column: x => x.CarBrandID,
+                        principalTable: "CarBrand",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CarFeatures_Cars_CarsId",
-                        column: x => x.CarsId,
-                        principalTable: "Cars",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CarFeatures_Features_FeatureID",
-                        column: x => x.FeatureID,
-                        principalTable: "Features",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CarFeatures_Features_FeaturesId",
-                        column: x => x.FeaturesId,
-                        principalTable: "Features",
-                        principalColumn: "Id");
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -301,6 +274,59 @@ namespace CarShopWeb.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cars",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CarModelID = table.Column<int>(type: "int", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    BasePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HorsePower = table.Column<int>(type: "int", nullable: false),
+                    Engine = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    EngineCylinder = table.Column<int>(type: "int", nullable: false),
+                    EngineLiter = table.Column<decimal>(type: "decimal(3,2)", nullable: false),
+                    Torque = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cars", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cars_CarModel_CarModelID",
+                        column: x => x.CarModelID,
+                        principalTable: "CarModel",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CarFeatures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CarID = table.Column<int>(type: "int", nullable: false),
+                    FeatureID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CarFeatures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CarFeatures_Cars_CarID",
+                        column: x => x.CarID,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CarFeatures_Features_FeatureID",
+                        column: x => x.FeatureID,
+                        principalTable: "Features",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -314,6 +340,12 @@ namespace CarShopWeb.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Cars_CarID",
+                        column: x => x.CarID,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Orders_Customers_CustomerID",
                         column: x => x.CustomerID,
@@ -329,7 +361,6 @@ namespace CarShopWeb.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderID = table.Column<int>(type: "int", nullable: false),
-                    OrdersId = table.Column<int>(type: "int", nullable: true),
                     FeatureID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -347,11 +378,6 @@ namespace CarShopWeb.Persistence.Migrations
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderDetails_Orders_OrdersId",
-                        column: x => x.OrdersId,
-                        principalTable: "Orders",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -421,14 +447,15 @@ namespace CarShopWeb.Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CarBrand_Name",
+                table: "CarBrand",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CarFeatures_CarID",
                 table: "CarFeatures",
                 column: "CarID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CarFeatures_CarsId",
-                table: "CarFeatures",
-                column: "CarsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CarFeatures_FeatureID",
@@ -436,9 +463,15 @@ namespace CarShopWeb.Persistence.Migrations
                 column: "FeatureID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarFeatures_FeaturesId",
-                table: "CarFeatures",
-                column: "FeaturesId");
+                name: "IX_CarModel_CarBrandID_Name",
+                table: "CarModel",
+                columns: new[] { "CarBrandID", "Name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cars_CarModelID",
+                table: "Cars",
+                column: "CarModelID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactType_CustomerID",
@@ -461,9 +494,9 @@ namespace CarShopWeb.Persistence.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_OrdersId",
-                table: "OrderDetails",
-                column: "OrdersId");
+                name: "IX_Orders_CarID",
+                table: "Orders",
+                column: "CarID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerID",
@@ -512,19 +545,25 @@ namespace CarShopWeb.Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Cars");
-
-            migrationBuilder.DropTable(
                 name: "Features");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "Cars");
+
+            migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
+                name: "CarModel");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "CarBrand");
         }
     }
 }

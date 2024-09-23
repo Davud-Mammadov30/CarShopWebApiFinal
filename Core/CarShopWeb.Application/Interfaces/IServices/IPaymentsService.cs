@@ -15,5 +15,6 @@ namespace CarShopWeb.Application.Interfaces.IServices
         Task<ResponseModel<bool>> UpdatePayments(UpdatePaymentsDTO updatePaymentsDTO,int id);
         Task<ResponseModel<bool>> DeletePayments(int id);
         Task<ResponseModel<GetPaymentsDTO>> GetPaymentsById(int id);
+        Task<ResponseModel<GetPaymentsDTO>> MaximumPayment();
     }
 }
